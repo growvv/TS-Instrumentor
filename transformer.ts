@@ -42,24 +42,43 @@ function instrumentFunction(node: ts.FunctionLikeDeclarationBase, factory: ts.No
     // 获取函数名
     const functionName = getFunctionName(node);
 
-    // 定义模板字符串，使用占位符进行字符串插值
-    const enterLogTemplate = `console.log("Entering function ${functionName}");`;
-    const exitLogTemplate = `console.log("Exiting function ${functionName}");`;
+    // 创建 console.log('Entering function <functionName>');
+    const enterLog = factory.createExpressionStatement(
+        factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+                factory.createIdentifier('console'),
+                factory.createIdentifier('log')
+            ),
+            undefined,
+            [factory.createStringLiteral("Entering function ${functionName}")]
+        )
+    );
 
-     // 解析模板字符串为 AST 节点
-     const enterLogNodes = createInstrumentationNodes(enterLogTemplate);
-     const exitLogNodes = createInstrumentationNodes(exitLogTemplate);
+    // 创建 console.log('Exiting function <functionName>');
+    const exitLog = factory.createExpressionStatement(
+        factory.createCallExpression(
+            factory.createPropertyAccessExpression(
+                factory.createIdentifier('console'),
+                factory.createIdentifier('log')
+            ),
+            undefined,
+            [factory.createStringLiteral("Exiting function ${functionName}")]
+        )
+    );
+
+
+    // debug
 
 
     if (node.body && ts.isBlock(node.body)) {
         // 插入 enterLog 在函数体开始
-        const newStatements = [...enterLogNodes, ...node.body.statements];
+        const newStatements = [enterLog, ...node.body.statements];
 
         // 遍历函数体中的每个语句，找到 return 语句并在其前插入 exitLog
         const updatedStatements = newStatements.map(stmt => {
             if (ts.isReturnStatement(stmt)) {
                 return factory.createBlock(
-                    [...exitLogNodes, stmt],
+                    [exitLog, stmt],
                     true
                 );
             }
@@ -69,7 +88,7 @@ function instrumentFunction(node: ts.FunctionLikeDeclarationBase, factory: ts.No
         // 如果函数没有显式的 return 语句，确保在函数结束时插入 exitLog
         const hasReturn = node.body.statements.some(ts.isReturnStatement);
         if (!hasReturn) {
-            updatedStatements.push(...exitLogNodes);
+            updatedStatements.push(exitLog);
         }
 
         // 创建新的函数体

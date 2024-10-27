@@ -1,8 +1,11 @@
 // transformerRunner.ts
 import * as ts from 'typescript';
 import * as fs from 'fs';
-import * as path from 'path';
 import createInstrumentationTransformer from './transformer';
+import { LogInstrumentor } from './Instrumentor/logInstrumentor';
+import { CallInstrumentor } from './Instrumentor/callInstrumentor';
+import { IDGenerator } from './IDGenerator';
+
 
 // 获取命令行参数
 const inputFilePath = process.argv[2];
@@ -26,7 +29,10 @@ const sourceFile = ts.createSourceFile(
 );
 
 // 创建 Transformer
-const transformer = createInstrumentationTransformer();
+const transformer = createInstrumentationTransformer([
+  new LogInstrumentor(new IDGenerator()),
+  new CallInstrumentor(new IDGenerator())
+]);
 
 // 应用转换器
 const result = ts.transform(sourceFile, [transformer]);

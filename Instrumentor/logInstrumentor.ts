@@ -3,50 +3,29 @@ import { BaseInstrumentor } from './baseInstrumentor';
 import { buildAst } from '../utils';
 
 
-/**
- * LogInstrumentor handles instrumentation of function declarations and expressions.
- */
 export class LogInstrumentor extends BaseInstrumentor {
 
-    /**
-     * Get the function name or generate an anonymous name.
-     * @param node Function-like declaration node.
-     */
-    getFunctionName(node: ts.FunctionLikeDeclarationBase): string {
-        const anonymousName = 'anonymous_' + this.idGenerator.generateFunctionId();
-        if (
-            ts.isFunctionDeclaration(node) ||
-            ts.isMethodDeclaration(node) ||
-            ts.isFunctionExpression(node)
-        ) {
-            return (node.name && ts.isIdentifier(node.name)) ? node.name.text : anonymousName;
-        } else if (ts.isArrowFunction(node)) {
-            return anonymousName;
+    private getFunctionName(node: ts.FunctionLikeDeclarationBase): string {
+        let getAnonymousName = () => {
+            return 'anonymous_' + this.idGenerator.generateFunctionId();
         }
-        return anonymousName;
+
+        if (ts.isFunctionDeclaration(node) ||
+            ts.isMethodDeclaration(node) ||
+            ts.isFunctionExpression(node)) {
+            return (node.name && ts.isIdentifier(node.name)) ? node.name.text : getAnonymousName();
+        } else if (ts.isArrowFunction(node)) {
+            return getAnonymousName();
+        }
+        return getAnonymousName();
     }
 
-    createInstrumentationNodes2(code: string): ts.Statement[] {
+    private createInstrumentationNodes2(code: string): ts.Statement[] {
         const sourceFile = ts.createSourceFile('instrumentation.ts', code, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
         return sourceFile.statements.map(stmt => stmt);
     }
 
-    /**
- * Creates AST nodes from a template string.
- * @param code Template code string.
- */
-    private createInstrumentationNodes(code: string): ts.Statement[] {
-        const sourceFile = ts.createSourceFile(
-            'instrumentation.ts',
-            code,
-            ts.ScriptTarget.Latest,
-            true,
-            ts.ScriptKind.TS
-        );
-        return sourceFile.statements.map(stmt => stmt);
-    }
-
-    _instrumentFunction(node: ts.FunctionLikeDeclarationBase, factory: ts.NodeFactory): ts.FunctionLikeDeclarationBase {
+    private _instrumentFunction(node: ts.FunctionLikeDeclarationBase, factory: ts.NodeFactory): ts.FunctionLikeDeclarationBase {
         // 获取函数名
         const functionName = this.getFunctionName(node);
 
@@ -133,7 +112,7 @@ export class LogInstrumentor extends BaseInstrumentor {
         return node;
     }
 
-    instrumentFunction(node: ts.Node, factory: ts.NodeFactory): ts.Node {
+    public instrumentFunction(node: ts.Node, factory: ts.NodeFactory): ts.Node {
         if (!ts.isFunctionLike(node)) {
             return node;
         }

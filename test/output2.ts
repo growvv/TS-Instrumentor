@@ -18,21 +18,21 @@ class Calculates {
         {
             console.log("Exiting function calculate");
             return (() => {
-                console.log("Entering function anonymous___func_4");
-                console.log("begin call add");
+                console.log("Entering function anonymous___func_1");
+                console.log("begin call this.add");
                 const result_1 = this.add(a, (() => {
-                    console.log("Entering function anonymous___func_5");
-                    console.log("begin call multiply");
+                    console.log("Entering function anonymous___func_2");
+                    console.log("begin call this.multiply");
                     const result_2 = this.multiply(b, 2);
-                    console.log("end call multiply");
+                    console.log("end call this.multiply");
                     {
-                        console.log("Exiting function anonymous___func_5");
+                        console.log("Exiting function anonymous___func_2");
                         return result_2;
                     }
                 })());
-                console.log("end call add");
+                console.log("end call this.add");
                 {
-                    console.log("Exiting function anonymous___func_4");
+                    console.log("Exiting function anonymous___func_1");
                     return result_1;
                 }
             })();
@@ -41,12 +41,12 @@ class Calculates {
 }
 const cal = new Calculates();
 const res = (() => {
-    console.log("Entering function anonymous___func_6");
-    console.log("begin call calculate");
+    console.log("Entering function anonymous___func_3");
+    console.log("begin call cal.calculate");
     const result_3 = cal.calculate(1, 3);
-    console.log("end call calculate");
+    console.log("end call cal.calculate");
     {
-        console.log("Exiting function anonymous___func_6");
+        console.log("Exiting function anonymous___func_3");
         return result_3;
     }
 })();

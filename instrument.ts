@@ -28,10 +28,12 @@ const sourceFile = ts.createSourceFile(
     ts.ScriptKind.TS
 );
 
+const iDGenerator = new IDGenerator();
+
 // 创建 Transformer
 const transformer = createInstrumentationTransformer([
-  new LogInstrumentor(new IDGenerator()),
-  new CallInstrumentor(new IDGenerator())
+  new LogInstrumentor(iDGenerator),
+  new CallInstrumentor(iDGenerator)
 ]);
 
 // 应用转换器
@@ -50,3 +52,5 @@ const transformedCode = printer.printFile(transformedSourceFile);
 fs.writeFileSync(outputFilePath, transformedCode, 'utf-8');
 
 console.log(`Transformed code written to ${outputFilePath}`);
+
+export default transformer;

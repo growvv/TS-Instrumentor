@@ -12,9 +12,9 @@ let __performanceData: PerformanceData = {
     loops: {}
 };
 process.on("exit", () => {
-    console.log("Entering function anonymous___func_3");
+    console.log("Entering function anonymous__func_3");
     console.log(__performanceData);
-    console.log("Exiting function anonymous___func_3");
+    console.log("Exiting function anonymous__func_3");
 });
 function add(a: number, b: number): number {
     console.log("Entering function add");
@@ -31,13 +31,13 @@ function multiply(a: number, b: number): number {
     }
 }
 for (let i = 0; i < 10; i++) {
-    if (!__performanceData.loops["result"]) {
-        __performanceData.loops["result"] = { iterationCount: 0, totalTime: 0, maxTime: 0, minTime: Infinity };
+    if (!__performanceData.loops["for_-495255ba"]) {
+        __performanceData.loops["for_-495255ba"] = { iterationCount: 0, totalTime: 0, maxTime: 0, minTime: Infinity };
     }
-    __performanceData.loops["result"].iterationCount += 1;
+    __performanceData.loops["for_-495255ba"].iterationCount += 1;
     {
         console.log((() => {
-            console.log("Entering function anonymous___func_4");
+            console.log("Entering function anonymous__func_4");
             console.log("begin call multiply");
             if (!__performanceData.functions["multiply"]) {
                 __performanceData.functions["multiply"] = { callCount: 0, totalTime: 0, maxTime: 0, minTime: Infinity };
@@ -45,7 +45,7 @@ for (let i = 0; i < 10; i++) {
             __performanceData.functions["multiply"].callCount += 1;
             const __call_start_multiply_1 = performance.now();
             const result_1 = multiply(4, (() => {
-                console.log("Entering function anonymous___func_5");
+                console.log("Entering function anonymous__func_5");
                 console.log("begin call add");
                 if (!__performanceData.functions["add"]) {
                     __performanceData.functions["add"] = { callCount: 0, totalTime: 0, maxTime: 0, minTime: Infinity };
@@ -53,7 +53,7 @@ for (let i = 0; i < 10; i++) {
                 __performanceData.functions["add"].callCount += 1;
                 const __call_start_add_1 = performance.now();
                 const result_2 = add(3, (() => {
-                    console.log("Entering function anonymous___func_6");
+                    console.log("Entering function anonymous__func_6");
                     console.log("begin call multiply");
                     if (!__performanceData.functions["multiply"]) {
                         __performanceData.functions["multiply"] = { callCount: 0, totalTime: 0, maxTime: 0, minTime: Infinity };
@@ -61,7 +61,7 @@ for (let i = 0; i < 10; i++) {
                     __performanceData.functions["multiply"].callCount += 1;
                     const __call_start_multiply_2 = performance.now();
                     const result_3 = multiply(2, (() => {
-                        console.log("Entering function anonymous___func_7");
+                        console.log("Entering function anonymous__func_7");
                         console.log("begin call add");
                         if (!__performanceData.functions["add"]) {
                             __performanceData.functions["add"] = { callCount: 0, totalTime: 0, maxTime: 0, minTime: Infinity };
@@ -76,7 +76,7 @@ for (let i = 0; i < 10; i++) {
                         __performanceData.functions["add"].minTime = Math.min(__performanceData.functions["add"].minTime, __duration_4);
                         console.log("end call add");
                         {
-                            console.log("Exiting function anonymous___func_7");
+                            console.log("Exiting function anonymous__func_7");
                             return result_4;
                         }
                     })());
@@ -87,7 +87,7 @@ for (let i = 0; i < 10; i++) {
                     __performanceData.functions["multiply"].minTime = Math.min(__performanceData.functions["multiply"].minTime, __duration_3);
                     console.log("end call multiply");
                     {
-                        console.log("Exiting function anonymous___func_6");
+                        console.log("Exiting function anonymous__func_6");
                         return result_3;
                     }
                 })());
@@ -98,7 +98,7 @@ for (let i = 0; i < 10; i++) {
                 __performanceData.functions["add"].minTime = Math.min(__performanceData.functions["add"].minTime, __duration_2);
                 console.log("end call add");
                 {
-                    console.log("Exiting function anonymous___func_5");
+                    console.log("Exiting function anonymous__func_5");
                     return result_2;
                 }
             })());
@@ -109,7 +109,7 @@ for (let i = 0; i < 10; i++) {
             __performanceData.functions["multiply"].minTime = Math.min(__performanceData.functions["multiply"].minTime, __duration_1);
             console.log("end call multiply");
             {
-                console.log("Exiting function anonymous___func_4");
+                console.log("Exiting function anonymous__func_4");
                 return result_1;
             }
         })()); // 36

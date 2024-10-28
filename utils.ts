@@ -1,13 +1,6 @@
 import * as ts from 'typescript';
+import { createHash } from 'crypto';
 
-/**
- * 创建一个 AST 语句节点数组，从代码字符串
- * @param code 插桩代码字符串
- */
-export function createInstrumentationNodes(code: string): ts.Statement[] {
-  const sourceFile = ts.createSourceFile('instrumentation.ts', code, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-  return sourceFile.statements.map(stmt => stmt);
-}
 
 export function buildAst(code: string): ts.NodeArray<ts.Statement> {
   let ast: ts.SourceFile;
@@ -42,4 +35,14 @@ export function buildAst(code: string): ts.NodeArray<ts.Statement> {
     },
   });
   return ast!.statements;
+}
+
+export function getHash(input: string): string {
+  // 使用 SHA-256 算法生成哈希
+  const hash = createHash('sha256')
+                  .update(input)
+                  .digest('hex');
+
+  // 截取前8位
+  return hash.substring(0, 8);
 }

@@ -4,7 +4,6 @@ import * as fs from 'fs';
 import createInstrumentationTransformer from './transformer';
 import { LogInstrumentor } from './Instrumentor/logInstrumentor';
 import { CallInstrumentor } from './Instrumentor/callInstrumentor';
-import { IDGenerator } from './IDGenerator';
 
 
 // 获取命令行参数
@@ -28,12 +27,10 @@ const sourceFile = ts.createSourceFile(
     ts.ScriptKind.TS
 );
 
-const iDGenerator = new IDGenerator();
-
 // 创建 Transformer
 const transformer = createInstrumentationTransformer([
-  new LogInstrumentor(iDGenerator),
-  new CallInstrumentor(iDGenerator)
+  new LogInstrumentor(),
+  new CallInstrumentor()
 ]);
 
 // 应用转换器

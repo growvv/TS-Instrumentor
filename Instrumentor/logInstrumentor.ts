@@ -1,23 +1,19 @@
 import * as ts from 'typescript';
 import { BaseInstrumentor } from './baseInstrumentor';
 import { buildAst } from '../utils';
-
+import { getHash } from '../utils';
 
 export class LogInstrumentor extends BaseInstrumentor {
 
     private getFunctionName(node: ts.FunctionLikeDeclarationBase): string {
-        let getAnonymousName = () => {
-            return 'anonymous_' + this.idGenerator.generateFunctionId();
-        }
-
         if (ts.isFunctionDeclaration(node) ||
             ts.isMethodDeclaration(node) ||
             ts.isFunctionExpression(node)) {
-            return (node.name && ts.isIdentifier(node.name)) ? node.name.text : getAnonymousName();
+            return (node.name && ts.isIdentifier(node.name)) ? node.name.text : getHash(node.getText());
         } else if (ts.isArrowFunction(node)) {
-            return getAnonymousName();
+            return getHash(node.getText());
         }
-        return getAnonymousName();
+        return getHash(node.getText());
     }
 
     private _instrumentFunction(node: ts.FunctionLikeDeclarationBase, factory: ts.NodeFactory): ts.FunctionLikeDeclarationBase {
@@ -107,8 +103,17 @@ export class LogInstrumentor extends BaseInstrumentor {
         return node;
     }
 
+    private isPatchedNode(node: ts.Node): boolean {
+        return node.pos < 0 && node.end < 0;
+    }
+
     public instrumentFunction(node: ts.Node, factory: ts.NodeFactory): ts.Node {
         if (!ts.isFunctionLike(node)) {
+            return node;
+        }
+
+        // 如果node是插桩过的节点，直接返回
+        if (this.isPatchedNode(node)) {
             return node;
         }
 

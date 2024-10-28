@@ -1,6 +1,7 @@
 import * as ts from 'typescript';
 import { BaseInstrumentor } from './baseInstrumentor';
 import { Creator } from '../createNode';
+import { getHash } from '../utils';
 
 
 export class CallInstrumentor extends BaseInstrumentor {
@@ -15,7 +16,7 @@ export class CallInstrumentor extends BaseInstrumentor {
                 return this.getFunctionName(node.expression as unknown as ts.CallExpression) + '.' + node.expression.name.text;
             }
         }
-        return 'anonymous_' + this.idGenerator.generateFunctionId();
+        return 'anonymous_' + getHash(node.getText());
     }
 
     private EXCLUDED_FUNCTIONS = new Set([
@@ -130,8 +131,21 @@ export class CallInstrumentor extends BaseInstrumentor {
         return iife;
     }
 
+    private getNodeUniqueName(node: ts.ForStatement | ts.ForOfStatement | ts.ForInStatement, factory: ts.NodeFactory): string {
+        if (ts.isForStatement(node)) {
+            return factory.createUniqueName('for_' + getHash(node.getText())).text;
+        }
+        if (ts.isForOfStatement(node)) {
+            return factory.createUniqueName('forof_' + getHash(node.getText())).text;
+        }
+        if (ts.isForInStatement(node)) {
+            return factory.createUniqueName('forin_' + getHash(node.getText())).text;
+        }
+        return '';
+    }
+
     private _instrumentLoop(node: ts.ForStatement | ts.ForOfStatement | ts.ForInStatement, factory: ts.NodeFactory): ts.Statement {
-        const loopName = factory.createUniqueName('result');
+        const loopName = factory.createUniqueName(this.getNodeUniqueName(node, factory));
         const loopData = Creator.createLoopData(loopName.text);
         const incrementIteration = Creator.createIncrementIteration(loopName.text);
 

@@ -1,6 +1,6 @@
 # 🔧 TypeScript Instrumentation Tool
 
-Welcome to the **TypeScript Instrumentation Tool**! This project leverages TypeScript’s Compiler API to parse TypeScript code into an Abstract Syntax Tree (AST), enabling you to **instrument** your code by adding and modifying nodes within the AST. This tool provides a framework to insert instrumentation code dynamically, allowing you to measure performance, log function calls, and more.
+Welcome to the **TypeScript Instrumentation Tool**! This project leverages TypeScript’s Compiler API to parse TypeScript code into an Abstract Syntax Tree (AST), enabling you to **instrument** your code with logging and performance measurement tools easily.
 
 ---
 
@@ -125,8 +125,13 @@ Open the outputFile.ts to review and test the new instrumented code.
 
 ## 🛠️ Built With
 
+## 🛠️ Built With
+
 - [TypeScript](https://www.typescriptlang.org/) - Type-safe language that compiles to JavaScript.
 - [TypeScript Compiler API](https://github.com/microsoft/TypeScript/wiki/Using-the-Compiler-API) - Used to create and manipulate the AST.
+- [AST Explorer](https://astexplorer.net/) - Visualize and explore AST structures interactively.
+- [TS AST Viewer](https://ts-ast-viewer.com/) - A tool to explore TypeScript ASTs, helpful for understanding node structures.
+
 
 ## 🤝 Contributing
 

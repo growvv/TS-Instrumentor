@@ -56,6 +56,9 @@ export class CallInstrumentor extends BaseInstrumentor {
         this.isInstrumented.set(functionName, true);
         (node as any)[this.INSTRUMENTED_SYMBOL] = true;
 
+        // 拼凑变量名时：将函数名中的 . 替换为 _，避免在生成代码时出现错误
+        const functionNameFormatted = functionName.replace(/\./g, '_');
+
         // Create console.log("begin call <functionName>");
         const beforeLog = factory.createExpressionStatement(
             factory.createCallExpression(
@@ -64,7 +67,7 @@ export class CallInstrumentor extends BaseInstrumentor {
                     factory.createIdentifier('log')
                 ),
                 undefined,
-                [factory.createStringLiteral(`begin call ${functionName}`)]
+                [factory.createStringLiteral(`[PREF] begin call ${functionNameFormatted}`)]
             )
         );
 
@@ -76,7 +79,7 @@ export class CallInstrumentor extends BaseInstrumentor {
                     factory.createIdentifier('log')
                 ),
                 undefined,
-                [factory.createStringLiteral(`end call ${functionName}`)]
+                [factory.createStringLiteral(`[PREF] end call ${functionNameFormatted}`)]
             )
         );
 
@@ -100,15 +103,12 @@ export class CallInstrumentor extends BaseInstrumentor {
             varDeclList
         );
         const returnStmt = factory.createReturnStatement(resultVarName);
-
-        const startTimeVar = factory.createUniqueName('__call_start_' + functionName);
+        const startTimeVar = factory.createUniqueName('__call_start_' + functionNameFormatted);
+        const endTimeVar = factory.createUniqueName('__call_end_' + functionNameFormatted);
         const functionData = Creator.createFunctionData(functionName);
         const incrementCallCount = Creator.createIncrementCallCount(functionName);
         const beginFunctionLog = Creator.createBeginFunctionLog(startTimeVar);
-        // const loopData = Creator.createLoopData(functionName);
-        // const incrementIteration = Creator.createIncrementIteration(functionName);
-
-        const endFunctionLog = Creator.createEndFunctionLog(functionName, startTimeVar);
+        const endFunctionLog = Creator.createEndFunctionLog(functionName, startTimeVar, endTimeVar);
 
         const block = factory.createBlock([beforeLog, functionData, incrementCallCount, beginFunctionLog, varStmt, ...endFunctionLog, afterLog, returnStmt], true);
 

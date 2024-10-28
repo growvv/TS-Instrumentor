@@ -373,9 +373,8 @@ export class Creator {
     // __performanceData.functions['functionName'].totalTime += __duration;
     // __performanceData.functions['functionName'].maxTime = Math.max(__performanceData.functions['functionName'].maxTime, __duration);
     // __performanceData.functions['functionName'].minTime = Math.min(__performanceData.functions['functionName'].minTime, __duration);
-    public static createEndFunctionLog(functionName: string, startTimeVar: ts.Identifier): ts.Statement[] {
+    public static createEndFunctionLog(functionName: string, startTimeVar: ts.Identifier, endTimeVar: ts.Identifier): ts.Statement[] {
         // const startTimeVar = factory.createUniqueName('__loop_start');
-        const endTimeVar = factory.createUniqueName('__call_end_' + functionName);
         const durationVar = factory.createUniqueName('__duration');
         const endStatements = [
             factory.createVariableStatement(

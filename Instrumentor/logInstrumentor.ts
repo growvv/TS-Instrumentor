@@ -20,8 +20,8 @@ export class LogInstrumentor extends BaseInstrumentor {
         // 获取函数名
         const functionName = this.getFunctionName(node);
 
-        const enterLogTemplate = `console.log("Entering function ${functionName}");`;
-        const exitLogTemplate = `console.log("Exiting function ${functionName}");`;
+        const enterLogTemplate = `console.log("[LOG] Entering function ${functionName}");`;
+        const exitLogTemplate = `console.log("[LOG] Exiting function ${functionName}");`;
 
         // Parse the templates into AST nodes
         const enterLogNodes = buildAst(enterLogTemplate);

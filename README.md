@@ -99,7 +99,7 @@ output:
 ## 🚀 Getting Started
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/ts-instrumentation-tool.git
+   git clone https://github.com/growvv/TS-Instrumentor.git
    cd ts-instrumentation-tool
     ``` 
 
@@ -113,7 +113,8 @@ output:
     ```
 
 4. **Explore Your Instrumented Code:**
-Open the outputFile.ts to review and test the new instrumented code.
+
+    Open the outputFile.ts to review and test the new instrumented code.
 
 
 ---
@@ -122,8 +123,6 @@ Open the outputFile.ts to review and test the new instrumented code.
 
 - **`logInstrumentor`**: Automatically adds log statements to capture the flow of the function.
 - **`perfInstrumentor`**: Adds performance markers around function calls and loops to measure execution time.
-
-## 🛠️ Built With
 
 ## 🛠️ Built With
 

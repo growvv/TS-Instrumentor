@@ -8,11 +8,5 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "plugins": [
-      {
-        "transform": "./transformer.ts",
-        // "type": "program"
-      }
-    ],
   }
 }

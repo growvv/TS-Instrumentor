@@ -5,19 +5,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "instrument": "ts-node instrument.ts",
-    "build": "npm run instrument && tsc",
-    "mybuild": "ttsc"
+    "build": "npm run instrument && tsc"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@jest/globals": "^29.7.0",
-    "@types/mocha": "^10.0.9",
     "@types/node": "^22.7.9",
-    "prettier": "^3.3.3",
-    "ttypescript": "^1.5.15",
     "typescript": "^5.6.3"
   }
 }

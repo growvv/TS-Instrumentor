@@ -15,7 +15,7 @@ process.on("exit", () => {
     console.log(__performanceData);
 });
 function example() {
-    console.log("Entering function example");
+    console.log("[LOG] Entering function example");
     let counter = 0; // 使用 let 声明可修改的变量
     for (let i = 0; i < 5; i++) {
         if (!__performanceData.loops["for_35afda5b"]) {
@@ -27,7 +27,7 @@ function example() {
         }
     }
     console.log(counter); // 输出 10
-    console.log("Exiting function example");
+    console.log("[LOG] Exiting function example");
 }
 for (let i = 0; i < 3; i++) {
     if (!__performanceData.loops["for_c3072826"]) {
@@ -36,7 +36,7 @@ for (let i = 0; i < 3; i++) {
     __performanceData.loops["for_c3072826"].iterationCount += 1;
     {
         (() => {
-            console.log("begin call example");
+            console.log("[PREF] begin call example");
             if (!__performanceData.functions["example"]) {
                 __performanceData.functions["example"] = { callCount: 0, totalTime: 0, maxTime: 0, minTime: Infinity };
             }
@@ -48,7 +48,7 @@ for (let i = 0; i < 3; i++) {
             __performanceData.functions["example"].totalTime += __duration_1;
             __performanceData.functions["example"].maxTime = Math.max(__performanceData.functions["example"].maxTime, __duration_1);
             __performanceData.functions["example"].minTime = Math.min(__performanceData.functions["example"].minTime, __duration_1);
-            console.log("end call example");
+            console.log("[PREF] end call example");
             return result_1;
         })();
     }

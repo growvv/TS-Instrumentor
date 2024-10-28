@@ -1,5 +1,6 @@
 import * as ts from 'typescript';
 import { BaseInstrumentor } from './baseInstrumentor';
+import { Creator } from '../createNode';
 
 
 export class CallInstrumentor extends BaseInstrumentor {
@@ -18,16 +19,11 @@ export class CallInstrumentor extends BaseInstrumentor {
     }
 
     private EXCLUDED_FUNCTIONS = new Set([
-        'performance.now',
-        '__performanceData',
-        '__call_start_',
-        '__call_end_',
-        '__call_duration_',
-        '__loop_start_',
-        '__loop_end_',
-        '__loop_duration_',
-        '__coverageData',
         'console.log',
+        'process.on',
+        'performance.now',
+        'Math.max',
+        'Math.min',
         // 可以根据需要添加更多排除的函数或变量
     ]);
 
@@ -104,7 +100,16 @@ export class CallInstrumentor extends BaseInstrumentor {
         );
         const returnStmt = factory.createReturnStatement(resultVarName);
 
-        const block = factory.createBlock([beforeLog, varStmt, afterLog, returnStmt], true);
+        const startTimeVar = factory.createUniqueName('__call_start_' + functionName);
+        const functionData = Creator.createFunctionData(functionName);
+        const incrementCallCount = Creator.createIncrementCallCount(functionName);
+        const beginFunctionLog = Creator.createBeginFunctionLog(startTimeVar);
+        // const loopData = Creator.createLoopData(functionName);
+        // const incrementIteration = Creator.createIncrementIteration(functionName);
+
+        const endFunctionLog = Creator.createEndFunctionLog(functionName, startTimeVar);
+
+        const block = factory.createBlock([beforeLog, functionData, incrementCallCount, beginFunctionLog, varStmt, ...endFunctionLog, afterLog, returnStmt], true);
 
         const arrowFunction = factory.createArrowFunction(
             undefined,
@@ -125,14 +130,56 @@ export class CallInstrumentor extends BaseInstrumentor {
         return iife;
     }
 
-    instrumentFunction(node: ts.Node, factory: ts.NodeFactory): ts.Node {
-        if (!ts.isCallExpression(node)) {
-            return node;
+    private _instrumentLoop(node: ts.ForStatement | ts.ForOfStatement | ts.ForInStatement, factory: ts.NodeFactory): ts.Statement {
+        const loopName = factory.createUniqueName('result');
+        const loopData = Creator.createLoopData(loopName.text);
+        const incrementIteration = Creator.createIncrementIteration(loopName.text);
+
+        const block = factory.createBlock([loopData, incrementIteration, node.statement], true);
+
+        if (ts.isForStatement(node)) {
+            return factory.createForStatement(
+                node.initializer,
+                node.condition,
+                node.incrementor,
+                block
+            );
         }
-        if (!this.shouldInstrumentCall(node)) {
-            return node;
+        if (ts.isForOfStatement(node)) {
+            return factory.createForOfStatement(
+                node.awaitModifier,
+                node.initializer,
+                node.expression,
+                block
+            );
+        }
+        if (ts.isForInStatement(node)) {
+            return factory.createForInStatement(
+                node.initializer,
+                node.expression,
+                block
+            );
+        }
+        return node;
+    }
+
+    instrumentFunction(node: ts.Node, factory: ts.NodeFactory): ts.Node {
+        // 一个文件的AST根节点是 SourceFile，插入一次初始化代码
+        if (ts.isSourceFile(node)) {
+            const initStmt = Creator.createInitStmt();
+            return ts.factory.updateSourceFile(node, [...initStmt, ...node.statements]);
         }
 
-        return  this._instrumentCall(node, factory);;
+        // 如果是函数调用节点，且需要插桩，则插入插桩代码
+        if (ts.isCallExpression(node) && this.shouldInstrumentCall(node)) {
+            node = this._instrumentCall(node, factory);
+        }
+
+        // 如果是循环节点，插入循环插桩代码
+        if (ts.isForStatement(node) || ts.isForOfStatement(node) || ts.isForInStatement(node)) {
+            node = this._instrumentLoop(node, factory);
+        }
+
+        return node;
     }
 }

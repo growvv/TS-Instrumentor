@@ -20,11 +20,6 @@ export class LogInstrumentor extends BaseInstrumentor {
         return getAnonymousName();
     }
 
-    private createInstrumentationNodes2(code: string): ts.Statement[] {
-        const sourceFile = ts.createSourceFile('instrumentation.ts', code, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
-        return sourceFile.statements.map(stmt => stmt);
-    }
-
     private _instrumentFunction(node: ts.FunctionLikeDeclarationBase, factory: ts.NodeFactory): ts.FunctionLikeDeclarationBase {
         // 获取函数名
         const functionName = this.getFunctionName(node);

@@ -99,7 +99,7 @@ output:
 ## 🚀 Getting Started
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/growvv/TS-Instrumentor.git
+   git clone https://github.com/growvv/ts-instrumentation-tool.git
    cd ts-instrumentation-tool
     ``` 
 
